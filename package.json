@@ -1,6 +1,6 @@
 {
   "name": "react-native-chips",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/ramprasath25/react-native-chips"
@@ -15,6 +15,9 @@
     "tags",
     "selectize"
   ],
-  "author": "Ramprasath R",
+  "authors": [
+    "Ramprasath R",
+    "bojko108 <bojko108@gmail.com>"
+  ],
   "license": "MIT"
 }

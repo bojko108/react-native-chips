@@ -1,5 +1,6 @@
 /**
  * @author Ramprasath R <ramprasath25@gmail.com>
+ * @author bojko108 <bojko108@gmail.com>
  */
 import React from 'react';
 import PropTypes from 'prop-types';
