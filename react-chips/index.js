@@ -2,95 +2,121 @@
  * @author Ramprasath R <ramprasath25@gmail.com>
  */
 import React from 'react';
-import { View, Text, TextInput, StyleSheet, Alert } from 'react-native';
+import PropTypes from 'prop-types';
+import { View } from 'react-native';
+import { TextInput } from 'react-native-paper';
 import Chips from './chips';
 
 class ReactChipsInput extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isFocused: false,
-            chips: (props.initialChips) ? props.initialChips : [],
-            inputText: ''
-        }
+  constructor(props) {
+    super(props);
+    let initialChips = props.initialChips
+      ? props.initialChips.map(c => {
+          return {
+            text: c.text ? c.text : c,
+            finished: c.finished !== undefined ? c.finished : false
+          };
+        })
+      : [];
+    this.state = {
+      isFocused: false,
+      chips: initialChips,
+      inputText: ''
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      chips: nextProps.initialChips ? nextProps.initialChips : []
+    });
+  }
+
+  handleFocus = () => {
+    this.setState({ isFocused: true });
+  };
+
+  handleChangeText = text => {
+    this.setState({ inputText: text });
+  };
+
+  handleChipClick = index => {
+    const newArray = [...this.state.chips];
+    if (newArray[index].finished) {
+      newArray.splice(index, 1);
+    } else {
+      newArray[index].finished = true;
     }
-    componentWillReceiveProps(nextProps) {
-        this.setState({
-            chips: (nextProps.initialChips) ? nextProps.initialChips : []
-        });
+    this.setState(
+      {
+        chips: newArray
+      },
+      () => this.props.onChangeChips && this.props.onChangeChips(this.state.chips)
+    );
+  };
+
+  handleBlur = () => {
+    if (this.state.inputText !== '' && this.state.chips.findIndex(c => c.text === this.state.inputText) === -1) {
+      this.setState(
+        {
+          chips: [...this.state.chips, { text: this.state.inputText, finished: false }],
+          inputText: '',
+          isFocused: false
+        },
+        () => this.props.onChangeChips && this.props.onChangeChips(this.state.chips)
+      );
+    } else {
+      this.setState(
+        {
+          inputText: '',
+          isFocused: false
+        },
+        () => this.props.onChangeChips && this.props.onChangeChips(this.state.chips)
+      );
     }
-    handleFocus = () => { this.setState({ isFocused: true }) }
-    handleChangeText = (text) => { this.setState({ inputText: text }) }
-    removeChip = (index) => {
-        const newArray = [...this.state.chips]
-        newArray.splice(index, 1);
-        this.setState({
-            chips: newArray
-        }, () => this.props.onChangeChips && this.props.onChangeChips(this.state.chips));
-        if (this.props.alertRequired) Alert.alert('', 'Removed Successfully')
-    }
-    handleBlur = () => {
-        if (this.state.inputText !== '' && this.state.chips.indexOf(this.state.inputText) === -1) {
-            this.setState({
-                chips: [...this.state.chips, this.state.inputText],
-                inputText: "",
-                isFocused: false
-            }, () => this.props.onChangeChips && this.props.onChangeChips(this.state.chips));
-            if (this.props.alertRequired) Alert.alert('', 'Added Successfully');
-        } else {
-            this.setState({
-                inputText: "",
-                isFocused: false
-            }, () => this.props.onChangeChips && this.props.onChangeChips(this.state.chips))
-            if (this.props.alertRequired) Alert.alert('Added Successfully', 'Chip Element already present');
-        }
-    }
-    render() {
-        const { label, chipStyle } = this.props;
-        const inputLabel = (label) ? label : 'Enter your text'
-        const { isFocused, inputText } = this.state;
-        const labelStyle = {
-            position: 'absolute',
-            left: 5,
-            top: !isFocused ? 12 : 1,
-            fontSize: !isFocused ? 20 : 14,
-            color: !isFocused ? '#aaa' : '#000',
-        }
-        const chips = this.state.chips.map((item, index) => (
-            <Chips
-                key={index}
-                value={item}
-                chipStyle={chipStyle}
-                onPress={() => this.removeChip(index)} />
-        ));
-        return (
-            <View>
-                <View style={{ paddingTop: 18, marginTop: 15 }}>
-                    <Text style={labelStyle}>
-                        {inputLabel}
-                    </Text>
-                    <TextInput
-                        style={styles.textInput}
-                        onFocus={this.handleFocus}
-                        onChangeText={(text) => this.handleChangeText(text)}
-                        onSubmitEditing={this.handleBlur}
-                        value={inputText}
-                    />
-                </View>
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' }}>
-                    {chips}
-                </View>
-            </View>
-        )
-    }
+  };
+
+  render() {
+    const { label, theme, labelStyle, chipStyle, chipsStyle } = this.props;
+
+    const { inputText } = this.state;
+
+    const chips = this.state.chips.map((item, index) => (
+      <Chips key={index} chip={item} chipStyle={chipStyle} onPress={() => this.handleChipClick(index)} />
+    ));
+
+    return (
+      <View>
+        <View>
+          <TextInput
+            label={label}
+            theme={theme}
+            style={labelStyle}
+            onFocus={this.handleFocus}
+            onSubmitEditing={this.handleBlur}
+            onChangeText={text => this.handleChangeText(text)}
+            value={inputText}
+          />
+        </View>
+        <View style={chipsStyle}>{chips}</View>
+      </View>
+    );
+  }
 }
-const styles = StyleSheet.create({
-    textInput: {
-        height: 32,
-        fontSize: 20,
-        padding: 7,
-        color: '#000'
-    }
-});
+
+ReactChipsInput.defaultProps = {
+  label: 'Enter your text',
+  theme: {},
+  labelStyle: {},
+  chipStyle: {},
+  chipsStyle: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' }
+};
+
+ReactChipsInput.propTypes = {
+  label: PropTypes.string,
+  theme: PropTypes.object,
+  labelStyle: PropTypes.object,
+  chipStyle: PropTypes.object,
+  chipsStyle: PropTypes.object
+};
 
 export default ReactChipsInput;
