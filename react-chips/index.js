@@ -77,7 +77,7 @@ class ReactChipsInput extends React.Component {
   };
 
   render() {
-    const { label, theme, labelStyle, chipStyle, chipsStyle } = this.props;
+    const { label, theme, blurOnSubmit, labelStyle, chipStyle, chipsStyle } = this.props;
 
     const { inputText } = this.state;
 
@@ -95,6 +95,7 @@ class ReactChipsInput extends React.Component {
             onFocus={this.handleFocus}
             onSubmitEditing={this.handleBlur}
             onChangeText={text => this.handleChangeText(text)}
+            blurOnSubmit={blurOnSubmit}
             value={inputText}
           />
         </View>
@@ -107,6 +108,7 @@ class ReactChipsInput extends React.Component {
 ReactChipsInput.defaultProps = {
   label: 'Enter your text',
   theme: {},
+  blurOnSubmit: false,
   labelStyle: {},
   chipStyle: {},
   chipsStyle: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' }
@@ -115,6 +117,7 @@ ReactChipsInput.defaultProps = {
 ReactChipsInput.propTypes = {
   label: PropTypes.string,
   theme: PropTypes.object,
+  blurOnSubmit: PropTypes.bool,
   labelStyle: PropTypes.object,
   chipStyle: PropTypes.object,
   chipsStyle: PropTypes.object
