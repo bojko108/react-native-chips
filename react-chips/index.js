@@ -11,14 +11,12 @@ import Chips from './chips';
 class ReactChipsInput extends React.Component {
   constructor(props) {
     super(props);
-    let initialChips = props.initialChips
-      ? props.initialChips.map(c => {
-          return {
-            text: c.text ? c.text : c,
-            finished: c.finished !== undefined ? c.finished : false
-          };
-        })
-      : [];
+    let initialChips = props.initialChips.map(c => {
+      return {
+        text: c.text ? c.text : c,
+        finished: c.finished !== undefined ? c.finished : false
+      };
+    });
     this.state = {
       isFocused: false,
       chips: initialChips,
@@ -110,6 +108,8 @@ ReactChipsInput.defaultProps = {
   theme: {},
   blurOnSubmit: false,
   labelStyle: {},
+  initialChips: [],
+  onChangeChips: null,
   chipStyle: {},
   chipsStyle: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' }
 };
@@ -118,6 +118,8 @@ ReactChipsInput.propTypes = {
   label: PropTypes.string,
   theme: PropTypes.object,
   blurOnSubmit: PropTypes.bool,
+  initialChips: PropTypes.array,
+  onChangeChips: PropTypes.func,
   labelStyle: PropTypes.object,
   chipStyle: PropTypes.object,
   chipsStyle: PropTypes.object
