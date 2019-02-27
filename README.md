@@ -49,14 +49,10 @@ this.setState({
 | onChangeChips | To get the value of chips in array            | Function     | -                 |
 | alertRequired | To trigger alert on adding and removing chips | Boolean      | false             |
 | chipStyle     | Changing the style of chip elements           | Style Object | {}                |
-
-**Additional properties**
-name | description | type | default
-:-------------------- |:------------------------------------------- |:-------- |:------------------
-labelStyle | Changing the style of the label elements | Style Object | {}
-chipsStyle | Changing the style of the chips container elements | Style Object | { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' }
-blurOnSubmit | Blurs the text field when submitted. Set to `true` if you don't want to hide the keyboard while submitting values | Boolean | false
-theme | Theme for the text input element | Style Object | {}
+| **labelStyle**   | Changing the style of the label elements           | Style Object | {}
+| **chipsStyle**   | Changing the style of the chips container elements | Style Object | { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' }
+| **blurOnSubmit** | Blurs the text field when submitted. Set to `true` if you don't want to hide the keyboard while submitting values | Boolean | false
+| **theme**        | Theme for the text input element                   | Style Object | {}
 
 ## Sample
 
